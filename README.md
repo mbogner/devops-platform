@@ -11,5 +11,6 @@ This platform consists of the following components:
 | nginx         | SSL terminator. Takes care about all SSL work                |
 | postgres      | Single central database                                      |
 | sonar         | Static source code analysis                                  |
+| valkey        | Caching server. Redis replacement.                           |
 
 
