@@ -1,0 +1,48 @@
+services:
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:alpine
+    container_name: gitlab-runner
+    hostname: gitlab-runner
+    depends_on:
+      docker-dind:
+        condition: service_healthy
+    environment:
+      TZ: UTC
+      DOCKER_HOST: tcp://docker-dind:2375
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./gitlab-runner/runner-config.toml:/etc/gitlab-runner/config.toml:ro
+    healthcheck:
+      test: ["CMD", "gitlab-runner", "verify", "--delete"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+    extra_hosts:
+      - "gitlab.mbo.dev:host-gateway"
+
+  docker-dind:
+    image: docker:24.0.9-dind
+    container_name: docker-dind
+    hostname: docker-dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - dind_data:/var/lib/docker
+    healthcheck:
+      test: ["CMD", "docker", "info"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+      start_period: 3s
+    extra_hosts:
+      - "gitlab.mbo.dev:host-gateway"
+
+
+volumes:
+  gitlab_runner_config:
+  dind_data:

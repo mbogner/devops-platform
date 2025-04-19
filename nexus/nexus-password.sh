@@ -1,0 +1,1 @@
+docker exec -ti devops-nexus-1 cat /nexus-data/admin.password

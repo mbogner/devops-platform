@@ -1,0 +1,16 @@
+services:
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    hostname: valkey
+    container_name: valkey
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 2s
+      timeout: 1s
+      retries: 10
+    volumes:
+      - valkey:/data
+
+volumes:
+  valkey:

@@ -1,0 +1,30 @@
+services:
+
+  gitlab-server:
+    image: gitlab/gitlab-ce:17.11.0-ce.0
+    container_name: gitlab-server
+    hostname: gitlab-server
+    ports:
+      - "127.0.0.1:22:22"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - gitlab_config:/etc/gitlab:rw
+      - gitlab_data:/var/opt/gitlab:rw
+      - ./gitlab/gitlab.rb:/etc/gitlab/gitlab.rb:rw
+    environment:
+      GITLAB_ROOT_EMAIL: "gitlab@mbo.dev"
+      GITLAB_ROOT_PASSWORD: "12345Tgb!"
+      TZ: UTC
+      EXTERNAL_URL: https://gitlab.mbo.dev
+    links:
+      - localmail
+      - valkey
+      - sonar
+      - nexus
+    extra_hosts:
+      - "gitlab.mbo.dev:127.0.0.1"
+
+volumes:
+  gitlab_config:
+  gitlab_data:

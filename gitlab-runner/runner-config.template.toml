@@ -1,0 +1,24 @@
+concurrent = 4
+check_interval = 0
+
+[session_server]
+session_timeout = 1800
+
+[[runners]]
+name = "macos-gitlab-runner"
+url = "https://gitlab.mbo.dev"
+token = "glrt-dDoxCnU6MdAfCXCdpwuyQ_bTl7dmB4IQ.0w1a6l1yb"
+executor = "docker"
+
+[runners.custom_build_dir]
+
+[runners.docker]
+host = "tcp://docker-dind:2375"
+image = "alpine:latest"
+privileged = true
+pull_policy = "if-not-present"
+shm_size = 512000000
+volumes = ["/cache"]
+extra_hosts = ["gitlab.mbo.dev:__GITLAB_IP__", "sonar.mbo.dev:__GITLAB_IP__"]
+
+[runners.cache]

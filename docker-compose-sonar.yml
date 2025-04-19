@@ -1,0 +1,28 @@
+services:
+  sonar:
+    image: mbopm/sonarqube:25.3.0.104237-community
+    container_name: sonar
+    hostname: sonar
+    volumes:
+      - sonar_data:/opt/sonarqube/data:rw
+      - sonar_logs:/opt/sonarqube/logs:rw
+      - sonar_extensions:/opt/sonarqube/extensions:rw
+      - sonar_temp:/opt/sonarqube/temp:rw
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://postgres:5432/sonar
+      SONAR_JDBC_USERNAME: admin
+      SONAR_JDBC_PASSWORD: s3cr3t
+      TZ: UTC
+    depends_on:
+      postgres:
+        condition: service_healthy
+    links:
+      - localmail
+    extra_hosts:
+      - "gitlab.mbo.dev:host-gateway"
+
+volumes:
+  sonar_data:
+  sonar_logs:
+  sonar_extensions:
+  sonar_temp:

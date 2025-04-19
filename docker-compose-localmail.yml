@@ -1,0 +1,28 @@
+services:
+
+  # http://smtp:pass123@127.0.0.1:8025
+  localmail:
+    image: axllent/mailpit:v1.24
+    container_name: localmail
+    hostname: localmail
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./localmail/auth:/auth:ro
+      - localmail:/data:rw
+    environment:
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ALLOW_INSECURE: true
+      MP_UI_AUTH_FILE: /auth
+      MP_SMTP_AUTH_FILE: /auth
+      MP_SMTP_DISABLE_RDNS: true
+      TZ: UTC
+    healthcheck:
+      test: wget --spider --tries 1 http://smtp:pass123@localhost:8025
+      interval: 1s
+      timeout: 1s
+      start_interval: 1s
+      retries: 5
+
+volumes:
+  localmail:

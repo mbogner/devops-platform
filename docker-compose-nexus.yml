@@ -1,0 +1,21 @@
+services:
+  nexus:
+    image: sonatype/nexus3:3.79.1-alpine
+    volumes:
+      - nexus-data:/nexus-data:rw
+      - ./nexus/nexus.key:/nexus-data/etc/karaf/secret.key:ro
+    environment:
+      TZ: UTC
+    links:
+      - localmail
+    extra_hosts:
+      - "gitlab.mbo.dev:host-gateway"
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8081" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+volumes:
+  nexus-data:
